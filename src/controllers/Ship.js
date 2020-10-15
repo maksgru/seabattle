@@ -1,4 +1,4 @@
-class Ship {
+export default class Ship {
     constructor(type) {
         this.type = type;
     }
