@@ -3,11 +3,6 @@ import initialPage from './components/initialPage.js';
 import isBtnSelected from './components/isBtnSelected.js';
 import Field from './controllers/Field.js';
 
-const view = new View(initialPage);
-
-const field = new Field(10);
-
-
 export default class GamePlay {
 
 
