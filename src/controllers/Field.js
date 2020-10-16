@@ -4,7 +4,7 @@ export default class Field {
     this.square = size * size;
   }
   build() {
-      field.style.cssText = `
+      root.style.cssText = `
         margin: 0 30% 30% 0; 
         display: grid; 
         grid-template-rows: repeat(${this.size}, 50px); 
@@ -14,7 +14,8 @@ export default class Field {
       const div = document.createElement("div");
       div.className = "cell";
       div.id = `${i}`;
-      field.append(div);
+      root.append(div);
+      console.log(div.id)
     }
   }
 }
