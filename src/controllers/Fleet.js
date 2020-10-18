@@ -10,7 +10,7 @@ export default class Fleet {
     trippleDeckShip = (position) => {
         return {
             name: 'trippleDeck1',
-            orientation: 'verticalHeadUp',
+            orientation: 'vertical',
             coordinates: [`${position}`, `${+position + 1}`, `${+position + 2}`]
         }
     

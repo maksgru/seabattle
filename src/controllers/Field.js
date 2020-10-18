@@ -1,4 +1,4 @@
-import transformCoordinates from './transformCoordinates.js';
+import {  idToAttr} from './transformCoordinates.js';
 
 export default class Field {
   constructor(size) {
@@ -19,8 +19,8 @@ export default class Field {
       const div = document.createElement("div");
       div.className = "empty";
       if (i == 47) div.className = "ship";
-      div.id = transformCoordinates.idToAttr(i);
-      div.innerHTML = transformCoordinates.idToAttr(i);
+      div.id = idToAttr(i);
+      div.innerHTML = idToAttr(i);
       field.append(div);
     }
   }
