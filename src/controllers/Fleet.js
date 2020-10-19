@@ -1,18 +1,20 @@
+import { normalizeCoordinates } from './transformCoordinates.js';
 export default class Fleet {
 
-    sinleDeckShip = (position) => {
-        return {
-            name: 'singleDeck1',
-            coordinates: [`${position}`]
-        }
-    }
+  constructor(startCoordinate, deckSize, direction='up') {
+    this.data = {
+      decks: [] /*{ 12: 'ok'}, {13: 'injured'}*/
+    };
+    this.ship(startCoordinate, deckSize, direction);
 
-    trippleDeckShip = (position) => {
+  }
+    ship = (position, deckSize, direction) => {
         return {
-            name: 'trippleDeck1',
-            orientation: 'vertical',
-            coordinates: [`${position}`, `${+position + 1}`, `${+position + 2}`]
+            position: position,
+            deckSize: deckSize,
+            direction: direction
         }
-    
     }
 }
+
+// name - position + decksize + direction

@@ -2,14 +2,13 @@
     border-style: solid;
     border-width: 1px;
     border-radius: 5px;
-    margin: 1px;
+    margin: 2px;
 }
 
 .ship {
+    border-radius: 5px;
     background: blue;
-    margin: 0 1px 0 1px;
-    border-top: none;
-    border-bottom: none;
+    margin: 0;
 }
 
 .test {

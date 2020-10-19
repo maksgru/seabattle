@@ -7,13 +7,15 @@ const field = new Field(10);
 const fleet = new Fleet();
 const ship = new Ship();
 
+
+
 field.build();
 
-// ship.establish(5, fleet.trippleDeckShip);
-// ship.establish('21', fleet.sinleDeckShip);
-ship.establish(randomPosition(), fleet.trippleDeckShip);
-// ship.establish('98', fleet.trippleDeckShip);
+userField.addEventListener('click', (e) => rotationHandler(e));
 
+function rotationHandler(e) {
+    console.log('e', e.target);
+}
 
 
 // check all ship's decks in the field

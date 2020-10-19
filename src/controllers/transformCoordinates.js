@@ -1,6 +1,7 @@
-function coordinatesToId(coordinates) {
-
-return `${coordinates.x},${coordinates.y}`
+function attrToCoord(attr) {
+    const x = attr[0];
+    const y = attr[1];
+    return {x: +x, y: +y};
 }
 
 function idToAttr(id) {
@@ -13,6 +14,6 @@ function normalizeCoordinates(coordinates) {
 
 export {
     normalizeCoordinates,
-    coordinatesToId,
+    attrToCoord,
     idToAttr
 }
