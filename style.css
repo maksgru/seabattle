@@ -2,21 +2,23 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
-#userField {
+#user {
+    margin-left: 40%;
     display: grid; 
     grid-template-rows: repeat(10, 30px); 
     grid-template-columns: repeat(10, 30px);
 }
-#compField {
+#comp {
     display: grid; 
     grid-template-rows: repeat(10, 30px); 
     grid-template-columns: repeat(10, 30px);
 }
 .empty {
     border-style: solid;
+    border-color: gray;
     border-width: 1px;
-    border-radius: 5px;
-    margin: 2px;
+    border-radius: 2px;
+    margin: 1px;
 }
 
 .ship {
@@ -27,4 +29,8 @@
 
 .test {
     background: gray;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    margin: 2px;
 }

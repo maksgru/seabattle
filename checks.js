@@ -14,9 +14,9 @@ function isPositionAvalible(ship, positions) {
     }
   }
   console.log(coordinates)
-  for (let i of coordinates) {
-    document.getElementById(i).className = 'test'
-  }
+  // for (let i of coordinates) {
+  //   document.querySelector(`[data-${ship.owner}='${i}']`).className = 'test'
+  // }
   return true;
 }
 

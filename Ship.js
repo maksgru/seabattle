@@ -1,7 +1,8 @@
 import { normalizeCoordinates } from './transformCoordinates.js'
 export default class Ship {
 
-  constructor(startCoordinate, deckSize, direction = 'vertical') {
+  constructor(owner, startCoordinate, deckSize, direction = 'vertical') {
+    this.owner = owner;
     this.coordinates = this.getCoordinates(startCoordinate, deckSize, direction);
     this.direction = direction;
   }

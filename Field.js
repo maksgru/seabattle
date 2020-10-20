@@ -7,6 +7,7 @@ import { isPositionAvalible } from './checks.js';
 
 export default class Field {
   constructor(name) {
+    this.name = name;
     this.ships = [];
     this.build(name);
   }
@@ -17,8 +18,8 @@ export default class Field {
     for (let i = 0; i < 100; i++) {
       const div = document.createElement("div");
       div.className = "empty";
-      div.id = idToAttr(i);
-      div.innerHTML = idToAttr(i);
+      div.dataset[name] = idToAttr(i);
+      // div.innerHTML = idToAttr(i);
       field.append(div);
     }
     this.establishShips();
@@ -36,7 +37,9 @@ export default class Field {
       for (let ship = 0; ship < i; ship++) {
         const direction = randomDirection();
         const position = randomPosition();
-        const ship = new Ship(position, shipRestriction[[i]], direction);
+        const decks = shipRestriction[[i]];
+        const owner = this.name;
+        const ship = new Ship(owner,position, decks, direction);
         this.ships.push(this.establish(ship));
       }
     }
@@ -51,7 +54,7 @@ export default class Field {
     const coordinates = ship.coordinates;
     for (let i of coordinates) {
       let idx = normalizeCoordinates(String(Object.keys(i)));
-      let elem = document.getElementById(idx);
+      let elem = document.querySelector(`[data-${ship.owner}="${idx}"]`);
       elem.className = "ship";
     }
     return ship;
