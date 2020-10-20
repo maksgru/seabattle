@@ -1,3 +1,9 @@
+#userField {
+    margin: 0 30% 0 30%; 
+    display: grid; 
+    grid-template-rows: repeat(10, 30px); 
+    grid-template-columns: repeat(10, 30px);
+}
 .empty {
     border-style: solid;
     border-width: 1px;
