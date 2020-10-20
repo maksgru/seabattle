@@ -1,5 +1,13 @@
+#root {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
 #userField {
-    margin: 0 30% 0 30%; 
+    display: grid; 
+    grid-template-rows: repeat(10, 30px); 
+    grid-template-columns: repeat(10, 30px);
+}
+#compField {
     display: grid; 
     grid-template-rows: repeat(10, 30px); 
     grid-template-columns: repeat(10, 30px);

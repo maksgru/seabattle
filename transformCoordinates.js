@@ -9,8 +9,7 @@ function idToAttr(id) {
     return idx[1] + idx[0];
 }
 function normalizeCoordinates(coordinates) {
-    const idx = `${coordinates}`
-    return coordinates.length == 1 ? `0${idx}` : `${idx}`;
+    return coordinates.length == 1 ? `0${coordinates}` : `${coordinates}`;
 }
 
 export {

@@ -1,9 +1,10 @@
 import Field from './Field.js';
 
-const field = new Field('userField');
+const userField = new Field('userField');
+const compField = new Field('compField');
 
 
-userField.addEventListener('click', rotationHandler);
+// userField.addEventListener('click', rotationHandler);
 
 function rotationHandler() {
     console.log(ship.data.decks[2]);
