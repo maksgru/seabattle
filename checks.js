@@ -1,19 +1,18 @@
 import { normalizeCoordinates, attrToCoord } from './transformCoordinates.js';
-import { getMarginPositions } from './positionHelpers.js';
+import { getShipMargins } from './positionHelpers.js';
 
 function isPositionAvalible(ship, positions) {
   if (!isShipOnField(ship)) return false;
-  const coordinates = getMarginPositions(ship);
+  const coordinates = getShipMargins(ship);
 
   for (let coordinate of coordinates) {
     for (let position of positions) {
       if (position == coordinate) {
-        console.log("can not set ship into this position", position);
+        // console.log("can not set ship into this position", position);
         return false;
       }
     }
   }
-  console.log(coordinates)
   // for (let i of coordinates) {
   //   document.querySelector(`[data-${ship.owner}='${i}']`).className = 'test'
   // }

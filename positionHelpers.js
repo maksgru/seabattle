@@ -1,7 +1,7 @@
 import { normalizeCoordinates, attrToCoord } from './transformCoordinates.js'
 
-function randomPosition() {
-  return Math.floor(Math.random() * 100);
+function randomPosition(range = 100) {
+  return Math.floor(Math.random() * range);
 }
 
 function shiftShipPosition(ship) {
@@ -12,7 +12,6 @@ function shiftShipPosition(ship) {
     newCoordinates.push({ [coordinate]: 'safe' });
   }
   ship.coordinates = newCoordinates;
-  console.log('shifted coordinates is', newCoordinates)
   return ship;
 
 }
@@ -32,40 +31,44 @@ function randomDirection() {
   return direction;
 }
 
+function getPositionMargins(position) {
+  let margins = new Set();
+  position = normalizeCoordinates(position);
+  margins.add(position);
+  const { x, y } = attrToCoord(position);
+    if (x + 1 < 10 && y - 1 >= 0) {
+      margins.add(normalizeCoordinates(`${+position - 1}`));
+      margins.add(normalizeCoordinates(`${+position + 9}`));
+      margins.add(normalizeCoordinates(`${+position + 10}`));
+    }
+    if (x + 1 < 10 && y + 1 < 10) {
+      margins.add(normalizeCoordinates(`${+position + 10}`));
+      margins.add(normalizeCoordinates(`${+position + 11}`));
+      margins.add(normalizeCoordinates(`${+position + 1}`));
+    }
+    if (x - 1 >= 0 && y + 1 < 10) {
+      margins.add(normalizeCoordinates(`${+position + 1}`));
+      margins.add(normalizeCoordinates(`${+position - 9}`));
+      margins.add(normalizeCoordinates(`${+position - 10}`));
+    }
+    if (x - 1 >= 0 && y - 1 >= 0) {
+      margins.add(normalizeCoordinates(`${+position - 10}`));
+      margins.add(normalizeCoordinates(`${+position - 11}`));
+      margins.add(normalizeCoordinates(`${+position - 1}`));
+    }
+  return margins
+}
 // get all coordinates including margins
-function getMarginPositions(ship) {
+function getShipMargins(ship) {
   const set = new Set();
   let coordinates = [];
   for (let position of ship.coordinates) {
     coordinates.push(String(Object.keys(position)))
   }
-  console.log('coordinates is ', coordinates)
   for (let i of coordinates) {
-    let position = normalizeCoordinates(i);
-    console.log('position is ', position)
-    set.add(normalizeCoordinates(i));
-    const { x, y } = attrToCoord(position);
-    console.log('x = ', x, 'y = ', y)
-    if (x + 1 < 10 && y - 1 >= 0) {
-      set.add(normalizeCoordinates(`${+i - 1}`));
-      set.add(normalizeCoordinates(`${+i + 9}`));
-      set.add(normalizeCoordinates(`${+i + 10}`));
-    }
-    if (x + 1 < 10 && y + 1 < 10) {
-      set.add(normalizeCoordinates(`${+i + 10}`));
-      set.add(normalizeCoordinates(`${+i + 11}`));
-      set.add(normalizeCoordinates(`${+i + 1}`));
-    }
-    if (x - 1 >= 0 && y + 1 < 10) {
-      set.add(normalizeCoordinates(`${+i + 1}`));
-      set.add(normalizeCoordinates(`${+i - 9}`));
-      set.add(normalizeCoordinates(`${+i - 10}`));
-    }
-    if (x - 1 >= 0 && y - 1 >= 0) {
-      set.add(normalizeCoordinates(`${+i - 10}`));
-      set.add(normalizeCoordinates(`${+i - 11}`));
-      set.add(normalizeCoordinates(`${+i - 1}`));
-    }
+    let margins = getPositionMargins(i);
+    for (i of margins) set.add(i);
+
   }
   return set;
 }
@@ -75,5 +78,6 @@ export {
   shiftShipPosition,
   getOccupiedPositions,
   randomDirection,
-  getMarginPositions
+  getShipMargins,
+  getPositionMargins
 };

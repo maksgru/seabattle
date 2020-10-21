@@ -3,8 +3,6 @@ import Ship from './Ship.js';
 import { randomDirection, randomPosition, shiftShipPosition, getOccupiedPositions } from './positionHelpers.js';
 import { isPositionAvalible } from './checks.js';
 
-
-
 export default class Field {
   constructor(name) {
     this.name = name;
@@ -19,7 +17,7 @@ export default class Field {
       const div = document.createElement("div");
       div.className = "empty";
       div.dataset[name] = idToAttr(i);
-      // div.innerHTML = idToAttr(i);
+      div.innerHTML = idToAttr(i);
       field.append(div);
     }
     this.establishShips();
@@ -27,26 +25,20 @@ export default class Field {
 
   establishShips() {
 
-    const shipRestriction = {
-      1: 4,
-      2: 3,
-      3: 2,
-      4: 1
-    }
+    const shipRestriction = { 1: 4, 2: 3, 3: 2, 4: 1 }
     for (let i = 1; i < 5; i++) {
       for (let ship = 0; ship < i; ship++) {
         const direction = randomDirection();
         const position = randomPosition();
         const decks = shipRestriction[[i]];
         const owner = this.name;
-        const ship = new Ship(owner,position, decks, direction);
+        const ship = new Ship(owner, position, decks, direction);
         this.ships.push(this.establish(ship));
       }
     }
   }
   establish(ship) {
     const positions = getOccupiedPositions(this.ships);
-    console.log(positions);
     if (!isPositionAvalible(ship, positions)) {
       const newShip = shiftShipPosition(ship);
       return this.establish(newShip);
@@ -59,6 +51,11 @@ export default class Field {
     }
     return ship;
   }
+  killPosition(position) {
+    let elem = document.querySelector(`[data-${this.name}="${position}"]`);
+    elem.className = 'killed';
+  }
+
   rotate() { }
   isRotationAvalible() { }
   replace() { }

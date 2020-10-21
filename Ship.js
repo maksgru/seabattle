@@ -14,7 +14,6 @@ export default class Ship {
       if (position > 99) position = position - 100;
       coordinates.push({ [position]: 'safe' })
     }
-    console.log('ship coordinates in constructor is ', coordinates)
     return coordinates;
   };
 }
