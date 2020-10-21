@@ -6,7 +6,6 @@ export default class User {
         this.frags = [];
     }
     shoot(target, previousTarget = '') {
-console.log('hello')
         // this.enemyField.killPosition(target);
 
         // 
@@ -14,7 +13,7 @@ console.log('hello')
         // getAvalible positions for shooting +/- horizontally or vertically
         // getRandom value of avaliblepositions.length 
         // target = avaliblePositions[value]
-        
+        this.enemyField.killPosition(target);
         for (let i = 0; i < 10; i++) {
             let positions = this.enemyField.ships[i].coordinates;
             positions = positions.map(item => String(Object.keys(item)));

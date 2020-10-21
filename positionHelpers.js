@@ -1,7 +1,8 @@
 import { normalizeCoordinates, attrToCoord } from './transformCoordinates.js'
 
 function randomPosition(range = 100) {
-  return Math.floor(Math.random() * range);
+  const position = Math.floor(Math.random() * range);
+  return position;
 }
 
 function shiftShipPosition(ship) {

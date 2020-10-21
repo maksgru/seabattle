@@ -3,19 +3,23 @@
     grid-template-columns: 1fr 1fr;
 }
 #user {
-    margin-left: 40%;
+    margin-left: auto;
+    margin-right: 50px;
     display: grid; 
     grid-template-rows: repeat(10, 30px); 
     grid-template-columns: repeat(10, 30px);
 }
 #comp {
+    margin-right: auto;
+    margin-right: 50px;
     display: grid; 
     grid-template-rows: repeat(10, 30px); 
     grid-template-columns: repeat(10, 30px);
 }
 
 .killed {
-    background: crimson;
+    border-style: solid;
+    border-color: red !important;
     border-radius: 5px;
     margin: 0;
 }
