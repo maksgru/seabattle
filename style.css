@@ -41,6 +41,7 @@
 .killed {
     border-style: solid;
     border-color: red !important;
+    background: black !important;
     border-radius: 5px;
     margin: 0;
 }

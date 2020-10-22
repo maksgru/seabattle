@@ -1,7 +1,12 @@
-import { idToAttr, normalizeCoordinates } from './transformCoordinates.js';
-import Ship from './Ship.js';
-import { randomDirection, randomPosition, shiftShipPosition, getOccupiedPositions } from './positionHelpers.js';
-import { isPositionAvalible } from './checks.js';
+import { idToAttr, normalizeCoordinates } from "./transformCoordinates.js";
+import Ship from "./Ship.js";
+import {
+  randomDirection,
+  randomPosition,
+  shiftShipPosition,
+  getOccupiedPositions,
+} from "./positionHelpers.js";
+import { isPositionAvalible } from "./checks.js";
 
 export default class Field {
   constructor(name) {
@@ -10,7 +15,7 @@ export default class Field {
     this.build(name);
   }
   build(name) {
-    const field = document.createElement('div');
+    const field = document.createElement("div");
     field.id = name;
     root.append(field);
     for (let i = 0; i < 100; i++) {
@@ -24,8 +29,7 @@ export default class Field {
   }
 
   establishShips() {
-
-    const shipRestriction = { 1: 4, 2: 3, 3: 2, 4: 1 }
+    const shipRestriction = { 1: 4, 2: 3, 3: 2, 4: 1 };
     for (let i = 1; i < 5; i++) {
       for (let ship = 0; ship < i; ship++) {
         const direction = randomDirection();
@@ -46,23 +50,48 @@ export default class Field {
     const coordinates = ship.coordinates;
     for (let i of coordinates) {
       let idx = normalizeCoordinates(String(Object.keys(i)));
-      let elem = document.querySelector(`[data-${ship.owner}="${idx}"]`);
-      elem.className = "ship";
+      if (ship.owner == "user") {
+        let elem = document.querySelector(`[data-${ship.owner}="${idx}"]`);
+        elem.className = "ship";
+      }
     }
     return ship;
   }
   shootPosition(position) {
-    position = normalizeCoordinates(position)
+    position = normalizeCoordinates(position);
     let elem = document.querySelector(`[data-${this.name}="${position}"]`);
-    elem.classList.add('shoted');
+    elem.classList.add("shoted");
   }
   killPosition(position) {
-    position = normalizeCoordinates(position)
+    position = normalizeCoordinates(position);
     let elem = document.querySelector(`[data-${this.name}="${position}"]`);
-    elem.classList.add('killed');
+    elem.classList.add("killed");
   }
 
-  rotate() { }
-  isRotationAvalible() { }
-  replace() { }
+
+  // todo check direction 
+  // todo check is position avalible
+  rotate(ship) {
+    const index = ship.direction == 'horizontal' ? 1 : 10;
+    const coordinates = ship.coordinates.map((elem) => Object.keys(elem));
+    let newCoordinates = [{[String(coordinates[0])]: 'safe'}];
+    for (let i = 1; i < coordinates.length; i++) {
+      let coordinate = +coordinates[0] + i * index;
+      if (+coordinate > 99) coordinate = +coordinate - 100;
+      newCoordinates.push({ [coordinate]: "safe" });
+    }
+    ship.direction = index == 1 ? 'vertical' : 'horizontal';
+    ship.coordinates = newCoordinates;
+
+    const positions = ship.coordinates;
+    for (let i of positions) {
+      let idx = normalizeCoordinates(String(Object.keys(i)));
+      if (ship.owner == "user") {
+        let elem = document.querySelector(`[data-${ship.owner}="${idx}"]`);
+        elem.className = "ship";
+      }
+    }
+  }
+  isRotationAvalible() {}
+  replace() {}
 }

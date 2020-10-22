@@ -6,7 +6,6 @@ export default class User {
     this.frags = [];
   }
   shoot(target) {
-    console.log('target is ',target)
     this.enemyField.shootPosition(target);
     for (let i = 0; i < 10; i++) {
       let positions = this.enemyField.ships[i].coordinates;

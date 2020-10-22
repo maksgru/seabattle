@@ -15,7 +15,7 @@ function isPlayerWin(member) {
 }
 
 
-function game(player='user', previousPosition=null) {
+function game(player='user') {
   let position = null;
   const area = document.getElementById('comp');
   const member = player == 'user' ? user : comp;
@@ -45,25 +45,40 @@ function game(player='user', previousPosition=null) {
 
     position = user.shoot(target);
     if (position) {
-    console.log('user target is',position)
-
       setTimeout(() => game(), 1000)
     } else {
       setTimeout(() => game('comp'), 1000)
     }
   }
 
-
   if(player == 'comp') {
-    position = comp.shoot(previousPosition);
-    console.log('comp position is', position)
+    position = comp.shoot();
     if (position) {
-      console.log('previous target is',position)
-      setTimeout(() => game('comp', position), 1000)
+      setTimeout(() => game('comp'), 1000)
     } else {
       setTimeout(() => game(), 1000)
     }
   }
 }
 
-game();
+document.getElementById('user').addEventListener('click', rotateHandler);
+
+function rotateHandler(event) {
+  const idx = event.target.dataset.user;
+  for (let ship of userField.ships) {
+    let positions = ship.coordinates.map((elem) => String(Object.keys(elem)))
+    if (positions.includes(idx)) {
+      const positions = ship.coordinates.map((elem) => Object.keys(elem));
+      for (let i of positions) {
+        document.querySelector(`[data-user="${i}"]`).className = 'empty';
+      }
+      userField.rotate(ship);
+      return
+    }
+  }
+} 
+
+
+
+
+// game();

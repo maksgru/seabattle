@@ -1,7 +1,7 @@
 import { normalizeCoordinates, attrToCoord } from './transformCoordinates.js'
 
-function randomPosition(range = 100) {
-  const position = Math.floor(Math.random() * range);
+function randomPosition(range = 99) {
+  const position = Math.floor(Math.random() * range + 1);
   return position;
 }
 
