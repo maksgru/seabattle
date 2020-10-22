@@ -17,7 +17,7 @@ export default class Field {
       const div = document.createElement("div");
       div.className = "empty";
       div.dataset[name] = idToAttr(i);
-      // div.innerHTML = idToAttr(i);
+      div.innerHTML = idToAttr(i);
       field.append(div);
     }
     this.establishShips();
@@ -50,6 +50,11 @@ export default class Field {
       elem.className = "ship";
     }
     return ship;
+  }
+  shootPosition(position) {
+    position = normalizeCoordinates(position)
+    let elem = document.querySelector(`[data-${this.name}="${position}"]`);
+    elem.classList.add('shoted');
   }
   killPosition(position) {
     position = normalizeCoordinates(position)
