@@ -2,9 +2,10 @@ import { normalizeCoordinates, attrToCoord } from './transformCoordinates.js';
 import { getShipMargins } from './positionHelpers.js';
 
 function isPositionAvalible(ship, positions) {
-  if (!isShipOnField(ship)) return false;
+  if (!isShipOnField(ship)) {
+    return false;
+  }
   const coordinates = getShipMargins(ship);
-
   for (let coordinate of coordinates) {
     for (let position of positions) {
       if (position == coordinate) {

@@ -5,7 +5,7 @@ function randomPosition(range = 99) {
   return position;
 }
 
-function shiftShipPosition(ship) {
+function shiftShipCoordinates(ship) {
   let newCoordinates = [];
   for (let i of ship.coordinates) {
     let coordinate = +Object.keys(i) + 1;
@@ -74,11 +74,26 @@ function getShipMargins(ship) {
   return set;
 }
 
+function calculateShipPositions(ship, position) {
+  const coordinates = ship.coordinates.map((elem) => Object.keys(elem));
+  const index = ship.direction == 'horizontal' ? 1 : 10;
+    
+    let newCoordinates = [{[position]: 'safe'}];
+    
+    for (let i = 1; i < coordinates.length; i++) {
+      let coordinate = +position + i * index;
+      if (+coordinate > 99) coordinate = +coordinate - 100;
+      newCoordinates.push({ [coordinate]: "safe" });
+    }
+    return newCoordinates;
+}
+
 export {
   randomPosition,
-  shiftShipPosition,
+  shiftShipCoordinates,
   getOccupiedPositions,
   randomDirection,
   getShipMargins,
-  getPositionMargins
+  getPositionMargins,
+  calculateShipPositions
 };

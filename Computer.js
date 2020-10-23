@@ -9,7 +9,7 @@ export default class Computer extends User {
     this.targets = this.getTargets();
     this.suspectedPositions = [];
   }
-
+// todo find out where refreshSuspectedPositions() is needed to use
   shoot() {
     this.refreshSuspectedPositions();
     let position = this.getRandomTarget();
@@ -55,8 +55,10 @@ export default class Computer extends User {
 
   getRandomTarget() {
     const range = this.targets.length;
+    console.log('range of random targets is', range)
     const randomIndex = randomPosition(range);
     const target = this.targets[randomIndex];
+    console.log('random target is ', target)
     return target;
   }
   getTargets() {

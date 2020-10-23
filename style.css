@@ -35,7 +35,12 @@
     from { opacity: 1.0; }
     to { opacity: 0.0; }
   }
-   
+  
+.avalible {
+    border-radius: 5px;
+    background: green;
+    margin: 0;
+   }
 
 
 .killed {

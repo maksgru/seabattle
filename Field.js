@@ -3,8 +3,9 @@ import Ship from "./Ship.js";
 import {
   randomDirection,
   randomPosition,
-  shiftShipPosition,
+  shiftShipCoordinates,
   getOccupiedPositions,
+  getShipMargins,
 } from "./positionHelpers.js";
 import { isPositionAvalible } from "./checks.js";
 
@@ -44,9 +45,10 @@ export default class Field {
   establish(ship) {
     const positions = getOccupiedPositions(this.ships);
     if (!isPositionAvalible(ship, positions)) {
-      const newShip = shiftShipPosition(ship);
+      const newShip = shiftShipCoordinates(ship);
       return this.establish(newShip);
     }
+      // it can be replaced in separated function e.g. paintShip(ship)
     const coordinates = ship.coordinates;
     for (let i of coordinates) {
       let idx = normalizeCoordinates(String(Object.keys(i)));
@@ -72,17 +74,35 @@ export default class Field {
   // todo check direction 
   // todo check is position avalible
   rotate(ship) {
-    const index = ship.direction == 'horizontal' ? 1 : 10;
+
+    // todo instead of following code use calculateShipPositions()
+    /* ------------------------------------------------------------------------ */
     const coordinates = ship.coordinates.map((elem) => Object.keys(elem));
+    const oldDirection = ship.direction;
+    const oldCoordinates = ship.coordinates;
+    let occupiedPositions = getOccupiedPositions(this.ships)
+    occupiedPositions = this.excludeCurrentShip(ship, occupiedPositions);
+    const index = ship.direction == 'horizontal' ? 1 : 10;
+    
     let newCoordinates = [{[String(coordinates[0])]: 'safe'}];
+    
     for (let i = 1; i < coordinates.length; i++) {
       let coordinate = +coordinates[0] + i * index;
       if (+coordinate > 99) coordinate = +coordinate - 100;
       newCoordinates.push({ [coordinate]: "safe" });
     }
+/* -------------------------------------------------------------- */
+
     ship.direction = index == 1 ? 'vertical' : 'horizontal';
     ship.coordinates = newCoordinates;
-
+ 
+    if (!isPositionAvalible(ship, occupiedPositions)) {
+      ship.coordinates = oldCoordinates;
+      ship.direction = oldDirection;
+      console.log('rotation impossible')
+      return false;
+    }
+    // it can be replaced in separated function e.g. paintShip(ship)
     const positions = ship.coordinates;
     for (let i of positions) {
       let idx = normalizeCoordinates(String(Object.keys(i)));
@@ -91,7 +111,24 @@ export default class Field {
         elem.className = "ship";
       }
     }
+    return true;
   }
-  isRotationAvalible() {}
-  replace() {}
+excludeCurrentShip(ship, positions) {
+  let shipMargins = getShipMargins(ship);
+  shipMargins.forEach((element) => {
+    if (positions.includes(element)) {
+      let idx = positions.indexOf(element);
+      positions.splice(idx, 1);
+    }
+  });
+  return positions;
+}
+
+  replace(ship, position) {
+
+  }
+
+  isReplaceAvalible(ship, position) {
+    return true
+  }
 }

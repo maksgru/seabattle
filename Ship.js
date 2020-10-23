@@ -3,10 +3,13 @@ export default class Ship {
 
   constructor(owner, startCoordinate, deckSize, direction = 'vertical') {
     this.owner = owner;
-    this.coordinates = this.getCoordinates(startCoordinate, deckSize, direction);
+    this.coordinates = this._coordinates(startCoordinate, deckSize, direction);
     this.direction = direction;
   }
-  getCoordinates = (position, deckSize, direction) => {
+  // getCoordinates(coordinates) {}
+  //setCoordinates(coordinates) {}
+
+  _coordinates = (position, deckSize, direction) => {
     let coordinates = [{ [position]: 'safe' }];
     let index = direction === 'vertical' ? 1 : 10;
     for (let i = 1; i < deckSize; i++) {

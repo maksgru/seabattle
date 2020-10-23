@@ -1,21 +1,20 @@
 import Field from "./Field.js";
 import User from "./User.js";
 import Computer from "./Computer.js";
-import { randomPosition } from "./positionHelpers.js";
-import { normalizeCoordinates } from "./transformCoordinates.js";
+import { calculateShipPositions } from "./positionHelpers.js";
 
 const userField = new Field("user");
 const compField = new Field("comp");
 
 const user = new User("user", compField);
 const comp = new Computer("computer", userField);
+
 function isPlayerWin(member) {
   if (member.frags.length == 20) return true;
   return false;
 }
 
-
-function game(player='user') {
+function game(player = 'user') {
   let position = null;
   const area = document.getElementById('comp');
   const member = player == 'user' ? user : comp;
@@ -37,7 +36,7 @@ function game(player='user') {
     const attr = elem.classList;
     const arr = Array.from(attr);
     const isShoted = arr.includes('shoted');
-    if(isShoted) return;
+    if (isShoted) return;
 
     const target = event.target.dataset.comp;
 
@@ -51,7 +50,7 @@ function game(player='user') {
     }
   }
 
-  if(player == 'comp') {
+  if (player == 'comp') {
     position = comp.shoot();
     if (position) {
       setTimeout(() => game('comp'), 1000)
@@ -60,7 +59,7 @@ function game(player='user') {
     }
   }
 }
-
+// todo remove this listener in "play" button handler
 document.getElementById('user').addEventListener('click', rotateHandler);
 
 function rotateHandler(event) {
@@ -69,16 +68,78 @@ function rotateHandler(event) {
     let positions = ship.coordinates.map((elem) => String(Object.keys(elem)))
     if (positions.includes(idx)) {
       const positions = ship.coordinates.map((elem) => Object.keys(elem));
-      for (let i of positions) {
-        document.querySelector(`[data-user="${i}"]`).className = 'empty';
+      if (userField.rotate(ship)) {
+        for (let i of positions) {
+          if (i == positions[0]) continue;
+          document.querySelector(`[data-user="${i}"]`).className = 'empty';
+        }
       }
-      userField.rotate(ship);
       return
     }
   }
-} 
+}
+
+// todo remove this listener in "play" button handler
+document.getElementById('user').addEventListener('contextmenu', replaceHandler);
+
+// todo
+// oncontextmenu => get occupied positions
+// remember ship coordinates
+// get current ship margins and change className 'empty'
+// exclude current ships.coordinates and margins from occupied
+// add mouseover listener =>
+// onmouseover => call isReplaceAvalible(ship, event.target) =>
+// replace() states ship.coordinates depending on target =>
+// => check isPositionAvalible (true or false) => change DOM
+// if true && onclick call replace(ship, position)
 
 
+// todo check event.target has ship else error
+function replaceHandler(event) {
+  event.preventDefault();
+  let currentShip;
+  const idx = event.target.dataset.user;
+
+  for (let ship of userField.ships) {
+    let positions = ship.coordinates.map((elem) => String(Object.keys(elem)))
+    if (positions.includes(idx)) {
+      currentShip = ship;
+      if (userField.isReplaceAvalible(currentShip, idx)) {
+        const positions = ship.coordinates.map((elem) => Object.keys(elem));
+        for (let i of positions) {
+          document.querySelector(`[data-user="${i}"]`).className = 'avalible';
+        }
+      }
+    }
+  }
+  const cell = document.getElementById('user');
+  cell.onmouseover = cell.onmouseout = replaceAvalibleHandler;
+  // document.getElementById('user').addEventListener('mouseover', replaceHandler)
+
+  function replaceAvalibleHandler(event) {
+    const isTarget = Object.keys(event.target.dataset);
+    if (isTarget != 'user') return;
+    if (event.type == 'mouseover') {
+      const position = event.target.dataset.user;
+      let positions = calculateShipPositions(currentShip, position);
+      positions = positions.map((item) => Object.keys(item));
+      console.log('pos for paint', String(positions))
+      positions.forEach((item) => {
+        document.querySelector(`[data-user="${item}"]`).className = 'avalible';
+      });
+    }
+    if (event.type == 'mouseout') {
+      event.target.className = 'empty';
+    }
+    document.getElementById('user').addEventListener('click', remove);
+    function remove() {
+      cell.onmouseover = cell.onmouseout = () => { };
+
+    }
+
+  }
+
+}
 
 
 // game();
