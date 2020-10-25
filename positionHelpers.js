@@ -76,14 +76,14 @@ function getShipMargins(ship) {
 
 function calculateShipPositions(ship, position) {
   const coordinates = ship.coordinates.map((elem) => Object.keys(elem));
-  const index = ship.direction == 'horizontal' ? 1 : 10;
+  const index = ship.direction == 'horizontal' ? 10 : 1;
     
     let newCoordinates = [{[position]: 'safe'}];
     
     for (let i = 1; i < coordinates.length; i++) {
       let coordinate = +position + i * index;
       if (+coordinate > 99) coordinate = +coordinate - 100;
-      newCoordinates.push({ [coordinate]: "safe" });
+      newCoordinates.push({ [normalizeCoordinates(coordinate)]: "safe" });
     }
     return newCoordinates;
 }

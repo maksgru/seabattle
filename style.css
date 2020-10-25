@@ -59,6 +59,15 @@
     margin: 1px;
 }
 
+.unavalible {
+    background: crimson;
+    border-style: solid;
+    border-color: gray;
+    border-width: 1px;
+    border-radius: 2px;
+    margin: 1px;
+}
+
 .ship {
     border-radius: 5px;
     background: blue;

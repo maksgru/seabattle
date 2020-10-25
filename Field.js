@@ -71,8 +71,7 @@ export default class Field {
   }
 
 
-  // todo check direction 
-  // todo check is position avalible
+
   rotate(ship) {
 
     // todo instead of following code use calculateShipPositions()
