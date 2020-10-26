@@ -10,12 +10,12 @@ export default class Ship {
   //setCoordinates(coordinates) {}
 
   _coordinates = (position, deckSize, direction) => {
-    let coordinates = [{ [position]: 'safe' }];
+    let coordinates = [{ [normalizeCoordinates(position)]: 'safe' }];
     let index = direction === 'vertical' ? 1 : 10;
     for (let i = 1; i < deckSize; i++) {
       position = position + index;
       if (position > 99) position = position - 100;
-      coordinates.push({ [position]: 'safe' })
+      coordinates.push({ [normalizeCoordinates(position)]: 'safe' })
     }
     return coordinates;
   };

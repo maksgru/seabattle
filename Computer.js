@@ -57,7 +57,9 @@ export default class Computer extends User {
     const range = this.targets.length;
     console.log('range of random targets is', range)
     const randomIndex = randomPosition(range);
-    const target = this.targets[randomIndex];
+    console.log('random index is', randomIndex);
+    console.log('targets ', this.targets)
+    const target = this.targets[randomIndex - 1];
     console.log('random target is ', target)
     return target;
   }

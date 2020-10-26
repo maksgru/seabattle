@@ -1,9 +1,8 @@
 import Field from "./Field.js";
 import User from "./User.js";
 import Computer from "./Computer.js";
-import { calculateShipPositions, getOccupiedPositions } from "./positionHelpers.js";
+import { calculateShipPositions, getOccupiedPositions, getShipMargins } from "./positionHelpers.js";
 import { isPositionAvalible } from "./checks.js";
-import { getLineMaggins } from "./computerHelpers.js";
 import { normalizeCoordinates } from "./transformCoordinates.js";
 
 const userField = new Field("user");
@@ -13,9 +12,18 @@ const user = new User("user", compField);
 const comp = new Computer("computer", userField);
 
 function isPlayerWin(member) {
-  if (member.frags.length == 20) return true;
-  return false;
+   return member.frags.length == 20;
 }
+
+function finishGame(winnerName) {
+  const message = document.createElement('h3');
+  message.innerHTML = `${winnerName} WIN! ! !`;
+  const newGameBtn = document.createElement('button');
+  newGameBtn.innerHTML = 'START NEW GAME';
+  document.body.append(message);
+  document.body.append(newGameBtn);
+  newGameBtn.onclick = () => document.location.reload();
+} 
 
 function game(player = "user") {
   let position = null;
@@ -23,7 +31,7 @@ function game(player = "user") {
   const member = player == "user" ? user : comp;
 
   if (isPlayerWin(member)) {
-    return alert(member.name + " win");
+    return finishGame(member.name);
   }
 
   if (player == "user") {
@@ -71,8 +79,10 @@ function rotateHandler(event) {
     let positions = ship.coordinates.map((elem) => String(Object.keys(elem)));
     if (positions.includes(idx)) {
       const positions = ship.coordinates.map((elem) => Object.keys(elem));
+      console.log(positions)
       if (userField.rotate(ship)) {
         for (let i of positions) {
+          i = normalizeCoordinates(i);
           if (i == positions[0]) continue;
           document.querySelector(`[data-user="${i}"]`).className = "empty";
         }
@@ -85,96 +95,115 @@ function rotateHandler(event) {
 // todo remove this listener in "play" button handler
 document.getElementById("user").addEventListener("contextmenu", replaceHandler);
 
-// todo
-// oncontextmenu => get occupied positions
-// remember ship coordinates
-// get current ship margins and change className 'empty'
-// exclude current ships.coordinates and margins from occupied
-// add mouseover listener =>
-// onmouseover => call isReplaceAvalible(ship, event.target) =>
-// replace() states ship.coordinates depending on target =>
-// => check isPositionAvalible (true or false) => change DOM
-// if true && onclick call replace(ship, position)
-
-// todo check event.target has ship else error
 function replaceHandler(event) {
   document.getElementById('user').removeEventListener('click', rotateHandler);
+  document.getElementById("user").removeEventListener("contextmenu", replaceHandler);
   event.preventDefault();
-  let currentShip;
-  const idx = event.target.dataset.user;
-
-  for (let ship of userField.ships) {
-    let positions = ship.coordinates.map((elem) => String(Object.keys(elem)));
-    if (positions.includes(idx)) {
-      currentShip = ship;
-      if (userField.isReplaceAvalible(currentShip, idx)) {
-        const positions = ship.coordinates.map((elem) => Object.keys(elem));
-        for (let i of positions) {
-          document.querySelector(`[data-user="${i}"]`).className = "avalible";
-        }
-      }
-    }
-  }
+  const target = event.target.dataset.user;
   let occupiedPositions = getOccupiedPositions(userField.ships);
-  occupiedPositions = userField.excludeCurrentShip(currentShip, occupiedPositions);
+  console.log('occup', occupiedPositions);
+  console.log('targ', target)
+  if (!occupiedPositions.includes(String(target))) {
+    console.log('oocup', occupiedPositions);
+    console.log('target'. target)
+    return
+  };
+  for (let ship of userField.ships) {
+    let shipPositons = ship.coordinates.map((item) => normalizeCoordinates(String(Object.keys(item))));
+    console.log('ship pos', shipPositons)
+    if (shipPositons.includes(target)) {
+      console.log('ship', ship)
+      userField.removedShip = ship;
+      const idx = userField.ships.indexOf(ship);
+      userField.ships.splice(idx, 1);
+      break;
+    }
 
+  }
+
+
+  console.log(userField.removedShip)
+  const positions = userField.removedShip.coordinates.map((item) => normalizeCoordinates(String(Object.keys(item))));
+  positions.forEach((item) => {
+    document.querySelector(`[data-user="${item}"]`).className = 'avalible';
+  });
   const cell = document.getElementById("user");
   cell.onmouseover = cell.onmouseout = replaceAvalibleHandler;
+}
 
-  function replaceAvalibleHandler(event) {
-    const isTarget = Object.keys(event.target.dataset);
-    if (isTarget != "user") return;
+function replaceAvalibleHandler(event) {
+  const isTarget = Object.keys(event.target.dataset);
+  if (isTarget != "user") return;
+  const occupiedPositions = getOccupiedPositions(userField.ships);
+  if (event.type == "mouseover") {
+    const target = event.target.dataset.user;
+    const newCoordinates = calculateShipPositions(userField.removedShip, target);
+    userField.removedShip.coordinates = newCoordinates;
+    if (!isPositionAvalible(userField.removedShip, occupiedPositions)) {
+      console.log('unavalible to set');
+      document.querySelector(`[data-user="${target}"]`).className = 'unavalible';
+      return
+    }
+    const positions = userField.removedShip.coordinates.map((item) => String(Object.keys(item)));
+    positions.forEach((item) => {
+      document.querySelector(`[data-user="${item}"]`).className = 'avalible';
+    });
+    document.getElementById("user").addEventListener('click', establishHandler);
+  }
 
-    if (event.type == "mouseover") {
-      const isTarget = Object.keys(event.target.dataset);
-      if (isTarget != "user") return;
-      const position = event.target.dataset.user;
-      let positions = calculateShipPositions(currentShip, position);
-      console.log("pos for paint", String(positions));
-      currentShip.coordinates = positions;
-      positions = positions.map((item) => Object.keys(item));
-      // console.log('occup', occupiedPositions)
-      if (isPositionAvalible(currentShip, occupiedPositions)) {
-        console.log('true')
-        positions.forEach((item) => {
-          document.querySelector(`[data-user="${item}"]`).className = "avalible";
-        });
-        document.getElementById("user").addEventListener("click", establishHandler);
-      } else { 
-        document.querySelector(`[data-user="${position}"]`).className = "unavalible";
-        return
+  if (event.type == "mouseout") {
+    for (let i = 0; i < 100; i++) {
+      let idx = normalizeCoordinates(i);
+      if (occupiedPositions.includes(idx)) {
+        document.querySelector(`[data-user="${idx}"]`).className = "ship";
+        continue
       }
+      document.querySelector(`[data-user="${idx}"]`).className = "empty";
     }
 
-    if (event.type == "mouseout") {
-      for (let i = 0; i < 100; i++) {
-        let idx = normalizeCoordinates(i);
-        if (occupiedPositions.includes(idx)) {
-          document.querySelector(`[data-user="${idx}"]`).className = "ship";
-          continue
-        }
-        document.querySelector(`[data-user="${idx}"]`).className = "empty";
-      }
-
-    }
-
-    function establishHandler(event) {
-      console.log('establ handl run ')
-      const position = event.target.dataset.user;
-      const newCoordinates = calculateShipPositions(currentShip, position);
-      currentShip.coordinates = newCoordinates;
-      let positions = newCoordinates.map((item) => Object.keys(item));
-      console.log("pos for establ", String(positions));
-      positions.forEach((item) => {
-        document.querySelector(`[data-user="${item}"]`).className = "ship";
-      });
-      document.getElementById("user").removeEventListener("click", establishHandler);
-
-      cell.onmouseover = cell.onmouseout = () => {};
-    }
   }
 }
 
-game();
+function establishHandler(event) {
+  const isTarget = Object.keys(event.target.dataset);
+  if (isTarget != "user") return;
+  const target = event.target.dataset.user;
+  const occupiedPositions = getOccupiedPositions(userField.ships);
+  const newCoordinates = calculateShipPositions(userField.removedShip, target);
+  userField.removedShip.coordinates = newCoordinates;
+  if (!isPositionAvalible(userField.removedShip, occupiedPositions)) {
+    console.log('unavalible to establish');
+    document.querySelector(`[data-user="${target}"]`).className = 'unavalible';
+    document.getElementById("user").removeEventListener('click', establishHandler);
+    return
+  }
+  const positions = userField.removedShip.coordinates.map((item) => String(Object.keys(item)));
+  positions.forEach((item) => {
+    document.querySelector(`[data-user="${item}"]`).className = 'ship';
+  });
+  userField.ships.push(userField.removedShip);
+  userField.removedShip = null;
+  const cell = document.getElementById("user");
+  document.getElementById("user").removeEventListener('click', establishHandler);
+  document.getElementById("user").addEventListener("click", rotateHandler);
+  document.getElementById("user").addEventListener("contextmenu", replaceHandler);
+
+  cell.onmouseover = cell.onmouseout = () => { };
+}
+
+
+const startButton = document.createElement('button');
+startButton.innerHTML = 'START GAME';
+
+startButton.onclick = () => {
+  document.getElementById("user").removeEventListener('click', establishHandler);
+  document.getElementById("user").removeEventListener("click", rotateHandler);
+  document.getElementById("user").removeEventListener("contextmenu", replaceHandler);
+  game();
+  startButton.remove();
+
+}
+
+document.body.append(startButton);
 
 

@@ -21,7 +21,9 @@ function getOccupiedPositions(ships) {
   let positions = [];
   for (let ship of ships) {
     for (let position of ship.coordinates) {
-      positions.push(String(Object.keys(position)));
+      position = String(Object.keys(position));
+      position = normalizeCoordinates(position)
+      positions.push(position);
     }
   }
   return positions;
@@ -75,17 +77,17 @@ function getShipMargins(ship) {
 }
 
 function calculateShipPositions(ship, position) {
-  const coordinates = ship.coordinates.map((elem) => Object.keys(elem));
-  const index = ship.direction == 'horizontal' ? 10 : 1;
-    
-    let newCoordinates = [{[position]: 'safe'}];
-    
-    for (let i = 1; i < coordinates.length; i++) {
-      let coordinate = +position + i * index;
-      if (+coordinate > 99) coordinate = +coordinate - 100;
-      newCoordinates.push({ [normalizeCoordinates(coordinate)]: "safe" });
-    }
-    return newCoordinates;
+  position = +position;
+  const direction = ship.direction;
+  const deckSize = ship.coordinates.length;
+  let coordinates = [{ [normalizeCoordinates(position)]: 'safe' }];
+  let index = direction === 'vertical' ? 1 : 10;
+  for (let i = 1; i < deckSize; i++) {
+    position = position + index;
+    if (position > 99) position = position - 100;
+    coordinates.push({ [normalizeCoordinates(position)]: 'safe' })
+  }
+  return coordinates;
 }
 
 export {

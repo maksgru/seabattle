@@ -4,6 +4,7 @@ export default class User {
     this.name = name;
     this.enemyField = enemyField;
     this.frags = [];
+    this.killed = [];
   }
   shoot(target) {
     this.enemyField.shootPosition(target);
@@ -21,4 +22,14 @@ export default class User {
     return false
   }
 
+  isKilled() {
+    for (let ship of this.enemyField.ships) {
+      let coordinates = ship.coordinates;
+      const conditions = coordinates.map((item) => String(Object.values(item)));
+      if (!conditions.includes('safe')) {
+        let killed = coordinates.map(() => String(Object.keys(item)));
+        this.killed.push(...killed);
+      }
+    }
+  }
 }

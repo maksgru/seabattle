@@ -14,6 +14,7 @@ export default class Field {
     this.name = name;
     this.ships = [];
     this.build(name);
+    this.removedShip;
   }
   build(name) {
     const field = document.createElement("div");
@@ -23,7 +24,7 @@ export default class Field {
       const div = document.createElement("div");
       div.className = "empty";
       div.dataset[name] = idToAttr(i);
-      div.innerHTML = idToAttr(i);
+      // div.innerHTML = idToAttr(i);
       field.append(div);
     }
     this.establishShips();
@@ -48,7 +49,7 @@ export default class Field {
       const newShip = shiftShipCoordinates(ship);
       return this.establish(newShip);
     }
-      // it can be replaced in separated function e.g. paintShip(ship)
+    // it can be replaced in separated function e.g. paintShip(ship)
     const coordinates = ship.coordinates;
     for (let i of coordinates) {
       let idx = normalizeCoordinates(String(Object.keys(i)));
@@ -76,25 +77,25 @@ export default class Field {
 
     // todo instead of following code use calculateShipPositions()
     /* ------------------------------------------------------------------------ */
-    const coordinates = ship.coordinates.map((elem) => Object.keys(elem));
+    const coordinates = ship.coordinates.map((elem) => String(Object.keys(elem)));
     const oldDirection = ship.direction;
     const oldCoordinates = ship.coordinates;
     let occupiedPositions = getOccupiedPositions(this.ships)
     occupiedPositions = this.excludeCurrentShip(ship, occupiedPositions);
     const index = ship.direction == 'horizontal' ? 1 : 10;
-    
-    let newCoordinates = [{[String(coordinates[0])]: 'safe'}];
-    
+
+    let newCoordinates = [{ [normalizeCoordinates(coordinates[0])]: 'safe' }];
+
     for (let i = 1; i < coordinates.length; i++) {
       let coordinate = +coordinates[0] + i * index;
       if (+coordinate > 99) coordinate = +coordinate - 100;
-      newCoordinates.push({ [coordinate]: "safe" });
+      newCoordinates.push({ [normalizeCoordinates(coordinate)]: "safe" });
     }
-/* -------------------------------------------------------------- */
+    /* -------------------------------------------------------------- */
 
     ship.direction = index == 1 ? 'vertical' : 'horizontal';
     ship.coordinates = newCoordinates;
- 
+
     if (!isPositionAvalible(ship, occupiedPositions)) {
       ship.coordinates = oldCoordinates;
       ship.direction = oldDirection;
@@ -112,22 +113,15 @@ export default class Field {
     }
     return true;
   }
-excludeCurrentShip(ship, positions) {
-  let shipMargins = getShipMargins(ship);
-  shipMargins.forEach((element) => {
-    if (positions.includes(element)) {
-      let idx = positions.indexOf(element);
-      positions.splice(idx, 1);
-    }
-  });
-  return positions;
-}
-
-  replace(ship, position) {
-
+  excludeCurrentShip(ship, positions) {
+    let shipMargins = getShipMargins(ship);
+    shipMargins.forEach((element) => {
+      if (positions.includes(element)) {
+        let idx = positions.indexOf(element);
+        positions.splice(idx, 1);
+      }
+    });
+    return positions;
   }
 
-  isReplaceAvalible(ship, position) {
-    return true
-  }
 }
