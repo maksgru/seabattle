@@ -13,23 +13,23 @@ export default class User {
       let positions = this.enemyField.ships[i].coordinates;
       positions = positions.map(item => String(Object.keys(item)));
       if (positions.includes(target)) {
-        positions[target] = 'injured';
+        const idx = positions.indexOf(target);
+        this.enemyField.ships[i].coordinates[idx][target] = 'injured';
         this.frags.push(target);
         this.enemyField.killPosition(target);
+        if (this.isKilled(this.enemyField.ships[i])) {
+          this.killed.push(...positions);
+        }
         return target;
       }
     }
     return false
   }
 
-  isKilled() {
-    for (let ship of this.enemyField.ships) {
-      let coordinates = ship.coordinates;
-      const conditions = coordinates.map((item) => String(Object.values(item)));
-      if (!conditions.includes('safe')) {
-        let killed = coordinates.map(() => String(Object.keys(item)));
-        this.killed.push(...killed);
-      }
-    }
+  isKilled(ship) {
+    return ship.coordinates.every(item => {
+      const key = Object.keys(item);
+      return item[key] == 'injured';
+    })
   }
 }

@@ -3,7 +3,6 @@ import { getShipMargins } from './positionHelpers.js';
 
 function isPositionAvalible(ship, positions) {
   if (!isShipOnField(ship)) {
-    console.log('ship out of field')
     return false;
   }
   const coordinates = getShipMargins(ship);
@@ -38,8 +37,6 @@ function isShipOnField(ship) {
    if (position[index] == 0) return false;
  }
   return positions.every((elem) => {
-    console.log('elem', elem);
-    console.log('idx'. idx)
     return elem[baseIndex] == idx;
   });
 }

@@ -19,10 +19,25 @@ export default class Computer extends User {
     if (target) {
       this.removeDiagonalMargins(target);
       this.suspectedPositions.push(...getLineMaggins(target));
+      this.killShip();
     }
     this.refreshSuspectedPositions();
     if (this.suspectedPositions.length) console.log('suspected targets are ', this.suspectedPositions)
     return target;
+  }
+
+  killShip() {
+    if (this.killed.length) {
+      this.killed.forEach((item, index) => {
+        document.querySelector(`[data-user="${item}"]`).className = 'kill';
+        let margins = getLineMaggins(item);
+        if (this.targets.includes(item)) this.targets.splice(index, 1);
+        margins.forEach((item, index) => {
+          if (this.targets.includes(item)) this.targets.splice(index, 1);
+        });
+      });
+    }
+    this.refreshSuspectedPositions();
   }
 
   refreshSuspectedPositions() {
@@ -55,12 +70,8 @@ export default class Computer extends User {
 
   getRandomTarget() {
     const range = this.targets.length;
-    console.log('range of random targets is', range)
     const randomIndex = randomPosition(range);
-    console.log('random index is', randomIndex);
-    console.log('targets ', this.targets)
     const target = this.targets[randomIndex - 1];
-    console.log('random target is ', target)
     return target;
   }
   getTargets() {

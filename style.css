@@ -51,6 +51,14 @@
     margin: 0;
 }
 
+.kill {
+    border-style: solid;
+    border-color: red !important;
+    background: rgb(169, 163, 14) !important;
+    border-radius: 5px;
+    margin: 0;
+}
+
 .empty {
     border-style: solid;
     border-color: gray;
