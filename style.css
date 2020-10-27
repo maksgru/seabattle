@@ -38,23 +38,22 @@
   
 .avalible {
     border-radius: 5px;
-    background: green;
+    background: green;  
     margin: 0;
    }
 
 
 .killed {
     border-style: solid;
-    border-color: red !important;
-    background: black !important;
+    background: rgb(255, 187, 0) !important;
     border-radius: 5px;
     margin: 0;
 }
 
 .kill {
     border-style: solid;
-    border-color: red !important;
-    background: rgb(169, 163, 14) !important;
+    border-color: rgb(230, 0, 0) !important;
+    background: rgba(150, 0, 0, 0.856) !important;
     border-radius: 5px;
     margin: 0;
 }

@@ -1,3 +1,4 @@
+import { normalizeCoordinates } from "./transformCoordinates.js";
 
 export default class User {
   constructor(name, enemyField) {
@@ -11,7 +12,7 @@ export default class User {
     // amount of ships = 10 
     for (let i = 0; i < 10; i++) {
       let positions = this.enemyField.ships[i].coordinates;
-      positions = positions.map(item => String(Object.keys(item)));
+      positions = positions.map(item => String(normalizeCoordinates(Object.keys(item))));
       if (positions.includes(target)) {
         const idx = positions.indexOf(target);
         this.enemyField.ships[i].coordinates[idx][target] = 'injured';
@@ -20,6 +21,7 @@ export default class User {
         if (this.isKilled(this.enemyField.ships[i])) {
           this.killed.push(...positions);
         }
+        this.killShip();
         return target;
       }
     }
@@ -28,8 +30,14 @@ export default class User {
 
   isKilled(ship) {
     return ship.coordinates.every(item => {
-      const key = Object.keys(item);
+      let key = String(Object.keys(item));
+      key = normalizeCoordinates(key);
       return item[key] == 'injured';
     })
   }
+    killShip() {
+      this.killed.forEach(item => {
+        document.querySelector(`[data-${this.enemyField.name}="${item}"]`).className = 'kill';
+      });
+    }
 }

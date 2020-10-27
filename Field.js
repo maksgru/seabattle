@@ -57,6 +57,10 @@ export default class Field {
         let elem = document.querySelector(`[data-${ship.owner}="${idx}"]`);
         elem.className = "ship";
       }
+      // if (ship.owner == "comp") {
+      //   let elem = document.querySelector(`[data-${ship.owner}="${idx}"]`);
+      //   elem.className = "ship";
+      // }
     }
     return ship;
   }

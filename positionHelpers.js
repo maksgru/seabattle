@@ -10,7 +10,7 @@ function shiftShipCoordinates(ship) {
   for (let i of ship.coordinates) {
     let coordinate = +Object.keys(i) + 1;
     if (coordinate > 99) coordinate = coordinate - 100;
-    newCoordinates.push({ [coordinate]: 'safe' });
+    newCoordinates.push({ [normalizeCoordinates(coordinate)]: 'safe' });
   }
   ship.coordinates = newCoordinates;
   return ship;

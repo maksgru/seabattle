@@ -17,24 +17,32 @@ export default class Computer extends User {
     const target = super.shoot(position);
     this.removeTarget(position); 
     if (target) {
-      this.removeDiagonalMargins(target);
       this.suspectedPositions.push(...getLineMaggins(target));
-      this.killShip();
+      this.removeKilled();
+      this.removeDiagonalMargins(target);
     }
     this.refreshSuspectedPositions();
-    if (this.suspectedPositions.length) console.log('suspected targets are ', this.suspectedPositions)
     return target;
   }
 
-  killShip() {
+  removeKilled() {
     if (this.killed.length) {
-      this.killed.forEach((item, index) => {
-        document.querySelector(`[data-user="${item}"]`).className = 'kill';
-        let margins = getLineMaggins(item);
-        if (this.targets.includes(item)) this.targets.splice(index, 1);
-        margins.forEach((item, index) => {
-          if (this.targets.includes(item)) this.targets.splice(index, 1);
-        });
+      let margins = [];
+      this.killed.forEach(item => {
+        item = normalizeCoordinates(item);
+        margins.push(...getLineMaggins(item));
+      });
+      margins.forEach((item) => {
+        item = normalizeCoordinates(item);
+        if (this.suspectedPositions.includes(item)) {
+          let index = this.suspectedPositions.indexOf(item);
+          this.suspectedPositions.splice(index, 1);
+        }
+        if (this.targets.includes(item)) {
+          let index = this.targets.indexOf(item);
+          this.targets.splice(index, 1);
+        }
+        document.querySelector(`[data-user="${item}"]`).classList.add('shoted');
       });
     }
     this.refreshSuspectedPositions();
@@ -70,6 +78,8 @@ export default class Computer extends User {
 
   getRandomTarget() {
     const range = this.targets.length;
+    console.log('range', range);
+    console.log('targets', this.targets)
     const randomIndex = randomPosition(range);
     const target = this.targets[randomIndex - 1];
     return target;

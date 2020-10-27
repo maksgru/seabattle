@@ -25,15 +25,20 @@ function finishGame(winnerName) {
   newGameBtn.onclick = () => document.location.reload();
 } 
 
+  let message = document.createElement('h3');
+  
+  document.body.append(message);
+
 function game(player = "user") {
   let position = null;
   const area = document.getElementById("comp");
   const member = player == "user" ? user : comp;
 
   if (isPlayerWin(member)) {
+    message.remove();
     return finishGame(member.name);
   }
-
+  message.innerHTML = `${member.name} shooting turn`;
   if (player == "user") {
     area.addEventListener("click", shootHandler);
   }
@@ -101,18 +106,12 @@ function replaceHandler(event) {
   event.preventDefault();
   const target = event.target.dataset.user;
   let occupiedPositions = getOccupiedPositions(userField.ships);
-  console.log('occup', occupiedPositions);
-  console.log('targ', target)
   if (!occupiedPositions.includes(String(target))) {
-    console.log('oocup', occupiedPositions);
-    console.log('target'. target)
     return
   };
   for (let ship of userField.ships) {
     let shipPositons = ship.coordinates.map((item) => normalizeCoordinates(String(Object.keys(item))));
-    console.log('ship pos', shipPositons)
     if (shipPositons.includes(target)) {
-      console.log('ship', ship)
       userField.removedShip = ship;
       const idx = userField.ships.indexOf(ship);
       userField.ships.splice(idx, 1);
@@ -121,8 +120,6 @@ function replaceHandler(event) {
 
   }
 
-
-  console.log(userField.removedShip)
   const positions = userField.removedShip.coordinates.map((item) => normalizeCoordinates(String(Object.keys(item))));
   positions.forEach((item) => {
     document.querySelector(`[data-user="${item}"]`).className = 'avalible';
@@ -140,7 +137,6 @@ function replaceAvalibleHandler(event) {
     const newCoordinates = calculateShipPositions(userField.removedShip, target);
     userField.removedShip.coordinates = newCoordinates;
     if (!isPositionAvalible(userField.removedShip, occupiedPositions)) {
-      console.log('unavalible to set');
       document.querySelector(`[data-user="${target}"]`).className = 'unavalible';
       return
     }
@@ -172,7 +168,6 @@ function establishHandler(event) {
   const newCoordinates = calculateShipPositions(userField.removedShip, target);
   userField.removedShip.coordinates = newCoordinates;
   if (!isPositionAvalible(userField.removedShip, occupiedPositions)) {
-    console.log('unavalible to establish');
     document.querySelector(`[data-user="${target}"]`).className = 'unavalible';
     document.getElementById("user").removeEventListener('click', establishHandler);
     return
